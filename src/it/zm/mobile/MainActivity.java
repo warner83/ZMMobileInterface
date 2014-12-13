@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 
@@ -76,7 +77,7 @@ public class MainActivity extends Activity {
         StrictMode.setThreadPolicy(policy); 
 		
 		// Create configuration data structure
-		confData = new ConfigData();
+		confData = new ConfigData(getBaseContext());
 		
 		if(!confData.checkConfigFile()){
 			
@@ -90,7 +91,7 @@ public class MainActivity extends Activity {
 			
 			// Auth and run CameraActivuty
 			auth();
-			runCameraActivity();
+			//runCameraActivity();
 		}
 	}
 	
@@ -120,8 +121,22 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.settings, menu);
 		return true;
 	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+		  switch (item.getItemId()) {
+		    case R.id.action_settings:
+		    	// Open Settings Action
+				Intent nw_intent = new Intent(this, SettingsActivity.class);
+				startActivityForResult(nw_intent, REQUEST_NW_SETTING);
+				
+				return true;
+				
+		    default:
+		    	return super.onOptionsItemSelected(item);
+		  }
+		}
 
 }

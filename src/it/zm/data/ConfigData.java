@@ -2,9 +2,12 @@ package it.zm.data;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+
+import android.content.Context;
 
 public class ConfigData {
 	public String baseUrl;
@@ -13,12 +16,16 @@ public class ConfigData {
 	public Boolean fullOnActive;
 	public Boolean bandwidthSaverActive;
 	
+	Context context;
+	
 	// Save and handle properties
 	private Properties prop;
 	
-	public ConfigData(){
+	public ConfigData(Context c){
 		prop = new Properties();
 		 
+		context = c;
+		
 		//set the default properties value
 		prop.setProperty("baseUrl", "localhost");
 		prop.setProperty("username", "admin");
@@ -43,7 +50,7 @@ public class ConfigData {
 		
     	try {	
     		//save properties to project root folder
-    		prop.store(new FileOutputStream("config.properties"), null);
+    		prop.store(context.openFileOutput("config.properties", Context.MODE_PRIVATE), null);
     	} catch (IOException ex) {
     		ex.printStackTrace();
     		return false;
@@ -55,7 +62,7 @@ public class ConfigData {
 		
     	try {	
     		//load properties to project root folder
-    		prop.load(new FileInputStream("config.properties"));
+    		prop.load(context.openFileInput("config.properties"));
     	} catch (IOException ex) {
     		ex.printStackTrace();
     		return false;
@@ -72,7 +79,7 @@ public class ConfigData {
 	
 	// Return true if a configuration file is available
 	public Boolean checkConfigFile(){
-		File f = new File("config.properties");
+		File f = new File( context.getFilesDir(), "config.properties");
 		return f.exists();
 	}
 }
