@@ -28,11 +28,14 @@
             android:name="it.zm.mobile.activities.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
-		<activity
+        <activity
             android:name="it.zm.mobile.activities.VideoActivity"
             android:label="@string/title_activity_settings" >
         </activity>
-        
+        <activity
+            android:name="it.zm.mobile.activities.ListCameras"
+            android:label="@string/title_activity_list_cameras" >
+        </activity>
     </application>
 
 </manifest>

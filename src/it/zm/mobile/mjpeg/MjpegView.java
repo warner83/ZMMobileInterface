@@ -13,6 +13,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -122,7 +123,7 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
             Bitmap ovl=null;
             
             while (mRun) {
-
+            	
                 Rect destRect=null;
                 Canvas c = null;
 
@@ -136,7 +137,7 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
                 			return;
                 		}
                         destRect = destRect(bmp.getWidth(),bmp.getHeight());
-                        
+                                                
                         c = mSurfaceHolder.lockCanvas();
                         synchronized (mSurfaceHolder) {
 
@@ -166,7 +167,7 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
                                 
 
                         }
-
+                        
                     }catch (IOException e){ 
                 	
                     }finally { 
@@ -174,10 +175,13 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
                     }
                 }
             }
+            
+            
         }
     }
 
     private void init(Context context) {
+    	Log.d(TAG, "INIT");
     	holder = getHolder();
     	saved_context = context;
         holder.addCallback(this);
@@ -196,6 +200,7 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
     }
     
     public void startPlayback() { 
+    	Log.d(TAG, "START");
         if(mIn != null) {
             mRun = true;
             if(thread==null){
@@ -206,6 +211,7 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
     }
     
     public void resumePlayback() { 
+    	Log.d(TAG, "RESUME");
         if(suspending){
             if(mIn != null) {
                 mRun = true;
@@ -218,10 +224,12 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
     public void stopPlayback() { 
+    	Log.d(TAG, "STOP");
     	if(mRun){
     		suspending = true;
     	}
         mRun = false;
+        
         if(thread!=null){
 	        boolean retry = true;
 	        while(retry) {
@@ -233,9 +241,11 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
 	        thread = null;
         }
         if(mIn!=null){
-        	try{
+        	/*try{
+        		Log.d(TAG, "Closing");
         		mIn.close();
-        	}catch(IOException e){}
+        		Log.d(TAG, "Closed");
+        	}catch(IOException e){}*/
             mIn = null;
         }
     }
@@ -253,6 +263,7 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
 	public void surfaceDestroyed(SurfaceHolder holder) { 
+    	Log.d(TAG, "DESTROYED");
         surfaceDone = false; 
         stopPlayback(); 
     }

@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import it.zm.auth.ZmHashAuth;
 import it.zm.data.ConfigData;
@@ -54,16 +55,12 @@ public class VideoActivity extends Activity {
         WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main);
         
-        /*SharedPreferences preferences = getSharedPreferences("SAVED_VALUES", MODE_PRIVATE);
-        width = preferences.getInt("width", width);
-        height = preferences.getInt("height", height);*/
-        
         Intent intent = getIntent();
         URL = intent.getExtras().getString("url");
         width = Integer.parseInt(intent.getExtras().getString("width"));
         height = Integer.parseInt(intent.getExtras().getString("height"));
         
-        Log.d(TAG, "Starting URL " + URL);
+        Log.d(TAG, "Starting URL " + URL + " w " + intent.getExtras().getString("width") + " h " + intent.getExtras().getString("height"));
 		        
         mv = (MjpegView) findViewById(R.id.mv);
         
@@ -74,10 +71,25 @@ public class VideoActivity extends Activity {
         new DoRead().execute(URL);
     }
 
+    @Override
+    public void onBackPressed() {
+    	Log.d(TAG, "Back pressed");
+        
+        if(mv!=null){
+        	if(mv.isStreaming()){
+		        mv.stopPlayback();
+		        suspending = true;
+        	}
+        }
+        
+        Log.d(TAG, "VideoActivity stopped");
+    	
+        finish();
+    }
     
     @Override
 	public void onResume() {
-    	if(DEBUG) Log.d(TAG,"onResume()");
+    	Log.d(TAG,"onResume()");
         super.onResume();
         if(mv!=null){
         	if(suspending){
@@ -90,12 +102,12 @@ public class VideoActivity extends Activity {
 
     @Override
 	public void onStart() {
-    	if(DEBUG) Log.d(TAG,"onStart()");
+    	Log.d(TAG,"onStart()");
         super.onStart();
     }
     @Override
 	public void onPause() {
-    	if(DEBUG) Log.d(TAG,"onPause()");
+    	Log.d(TAG,"onPause()");
         super.onPause();
         if(mv!=null){
         	if(mv.isStreaming()){
@@ -106,41 +118,15 @@ public class VideoActivity extends Activity {
     }
     @Override
 	public void onStop() {
-    	if(DEBUG) Log.d(TAG,"onStop()");
+    	Log.d(TAG,"onStop()");
         super.onStop();
     }
 
     @Override
 	public void onDestroy() {
-    	if(DEBUG) Log.d(TAG,"onDestroy()");
+    	Log.d(TAG,"onDestroy()");
         super.onDestroy();
     }
-    
-    /*@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-    	case 0:
-    		if (resultCode == Activity.RESULT_OK) {
-    			width = data.getIntExtra("width", width);
-    			height = data.getIntExtra("height", height);
-	    			    		
-	    		SharedPreferences preferences = getSharedPreferences("SAVED_VALUES", MODE_PRIVATE);
-				SharedPreferences.Editor editor = preferences.edit();
-				
-				if(mv!=null){
-					mv.setResolution(width, height);
-				}
-				
-				editor.putInt("width", width);
-				editor.putInt("height", height);
-				
-				editor.commit();
-
-				new RestartApp().execute();
-    		}
-    		break;
-        }
-    }*/
     
     public class DoRead extends AsyncTask<String, Void, MjpegInputStream> {
         @Override

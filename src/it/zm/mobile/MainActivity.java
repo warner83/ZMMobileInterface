@@ -4,6 +4,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import it.zm.auth.ZmHashAuth;
 import it.zm.data.ConfigData;
+import it.zm.data.DataHolder;
+import it.zm.mobile.activities.ListCameras;
 import it.zm.mobile.activities.SettingsActivity;
 import it.zm.mobile.activities.VideoActivity;
 import it.zm.mobile.activities.VideoActivity.RestartApp;
@@ -44,26 +46,19 @@ public class MainActivity extends Activity {
 		authenticator = new ZmHashAuth(baseUrl, confData.username, confData.password, client);
 
 		// Get auth token only if needed
-		if(authenticator.checkAuthNeeded())
-			auth = authenticator.getAuthHash();		
+		if(authenticator.checkAuthNeeded()){
+			auth = authenticator.getAuthHash();
+			DataHolder.getDataHolder().auth = auth;
+		}
     }
     
-    protected void runCameraActivity(){
-		// Get number of cameras
+    protected void runListCameraActivity(){
+		// Get number of cameras and create common DataCamera structure
 		dc = new DataCameras(baseUrl, client);
 		dc.fetchData();
-    	
-    	int numCameras = dc.getNumCameras();
-
-		Log.d(TAG,"Got num cameras: "+numCameras);
+		DataHolder.getDataHolder().dc = dc;
 		
-		int monitor = 1;
-		
-		Intent nw_intent = new Intent(this, VideoActivity.class);
-		nw_intent.putExtra("url", "http://"+confData.baseUrl+"/cgi-bin/zms?mode=jpeg&monitor="+monitor+"&scale=100&maxfps=5&buffer=1000&"+auth);
-		nw_intent.putExtra("width", "1280");
-		nw_intent.putExtra("height", "800");
-		
+		Intent nw_intent = new Intent(this, ListCameras.class);
 		startActivity(nw_intent);
     }
     
@@ -76,8 +71,9 @@ public class MainActivity extends Activity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy); 
 		
-		// Create configuration data structure
+		// Create shared configuration data structure
 		confData = new ConfigData(getBaseContext());
+		DataHolder.getDataHolder().confData = confData;
 		
 		if(!confData.checkConfigFile()){
 			
@@ -91,7 +87,7 @@ public class MainActivity extends Activity {
 			
 			// Auth and run CameraActivuty
 			auth();
-			//runCameraActivity();
+			runListCameraActivity();
 		}
 	}
 	
@@ -112,7 +108,7 @@ public class MainActivity extends Activity {
     			
     			// Auth and run CameraActivuty
     			auth();
-    			runCameraActivity();
+    			runListCameraActivity();
     		}
     		break;
         }

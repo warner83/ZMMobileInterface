@@ -1,5 +1,6 @@
 package it.zm.mobile.activities;
 
+import it.zm.data.DataHolder;
 import it.zm.mobile.R;
 import it.zm.mobile.R.layout;
 import it.zm.mobile.R.menu;
@@ -18,6 +19,15 @@ public class SettingsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.settings_activity);
+		
+		TextView hostText = (TextView)findViewById(R.id.hostText);
+		hostText.setText(DataHolder.getDataHolder().confData.baseUrl);
+		
+		TextView userText = (TextView)findViewById(R.id.userText);
+		userText.setText(DataHolder.getDataHolder().confData.username);
+		
+		TextView passwordText = (TextView)findViewById(R.id.passwordText);
+		passwordText.setText(DataHolder.getDataHolder().confData.password);
 		
 		Button buttonOK = (Button) findViewById(R.id.buttonConfirm);
 		buttonOK.setOnClickListener( new OnClickListener(){
