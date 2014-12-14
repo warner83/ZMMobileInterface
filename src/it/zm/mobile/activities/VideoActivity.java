@@ -61,7 +61,7 @@ public class VideoActivity extends Activity {
         height = Integer.parseInt(intent.getExtras().getString("height"));
         
         Log.d(TAG, "Starting URL " + URL + " w " + intent.getExtras().getString("width") + " h " + intent.getExtras().getString("height"));
-		        
+        
         mv = (MjpegView) findViewById(R.id.mv);
         
 		if(mv!=null){

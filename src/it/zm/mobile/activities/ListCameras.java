@@ -54,7 +54,6 @@ public class ListCameras extends Activity {
               
              // ListView Clicked item index
              int itemPosition     = position;
-             int monitor = position + 1;
              
              // ListView Clicked item value
              String  itemValue    = (String) listview.getItemAtPosition(position);
@@ -63,15 +62,15 @@ public class ListCameras extends Activity {
               Toast.makeText(getApplicationContext(),
                 "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
                 .show();
+                    		 
+              List<String> IDs = dc.getIDs();
               
-      		  List<String> IDs = dc.getIDs();
-      		  
-      		  String m_id = IDs.get(monitor);
+      		  String m_id = IDs.get(position);
               
-      		  Log.d("LIST CAMERAS", "Selected " + m_id + " width " + dc.getWidth(m_id) + " height " + dc.getHeight(m_id));
+      		  Log.d("LIST CAMERAS", "Selected monitor " + position + " ID " + m_id + " width " + dc.getWidth(m_id) + " height " + dc.getHeight(m_id));
       		        		  
               Intent nw_intent = new Intent(ListCameras.this, VideoActivity.class);
-      		  nw_intent.putExtra("url", "http://"+DataHolder.getDataHolder().confData.baseUrl+"/cgi-bin/zms?mode=jpeg&monitor="+(monitor)+"&scale=100&maxfps=5&buffer=1000&"+DataHolder.getDataHolder().auth);
+      		  nw_intent.putExtra("url", "http://"+DataHolder.getDataHolder().confData.baseUrl+"/cgi-bin/zms?mode=jpeg&monitor="+(m_id)+"&scale=100&maxfps=5&buffer=1000&"+DataHolder.getDataHolder().auth);
       		  nw_intent.putExtra("width", Integer.toString(dc.getWidth(m_id)));
       		  nw_intent.putExtra("height", Integer.toString(dc.getHeight(m_id)));
       		        		
