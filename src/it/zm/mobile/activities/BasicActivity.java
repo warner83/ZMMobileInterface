@@ -1,14 +1,14 @@
-package it.zm.mobile;
+package it.zm.mobile.activities;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import it.zm.auth.ZmHashAuth;
 import it.zm.data.ConfigData;
 import it.zm.data.DataHolder;
-import it.zm.mobile.activities.ListCameras;
-import it.zm.mobile.activities.SettingsActivity;
-import it.zm.mobile.activities.VideoActivity;
-import it.zm.mobile.activities.VideoActivity.RestartApp;
+import it.zm.mobile.R;
+import it.zm.mobile.R.id;
+import it.zm.mobile.R.layout;
+import it.zm.mobile.R.menu;
 import it.zm.xml.DataCameras;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -19,11 +19,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends Activity {
+
+public abstract class BasicActivity extends Activity {
 
 	private static final int REQUEST_NW_SETTING = 0;
 	
-	private static final String TAG = "MAIN_ACTIVITY";
+	private static final String TAG = "BASIC_ACTIVITY";
 	
     ConfigData confData;
     String auth;
@@ -37,10 +38,10 @@ public class MainActivity extends Activity {
     
     protected void auth(){
         auth = null;
-        baseUrl = new String("http://"+confData.baseUrl+"/zm/index.php");        
+        baseUrl = DataHolder.getDataHolder().getBaseUrl();        
         
 		// Create Http connection for everyone
-		client = new DefaultHttpClient();
+		client = DataHolder.getDataHolder().getHttpClient();
 		
 		// Authenticate
 		authenticator = new ZmHashAuth(baseUrl, confData.username, confData.password, client);
@@ -48,32 +49,22 @@ public class MainActivity extends Activity {
 		// Get auth token only if needed
 		if(authenticator.checkAuthNeeded()){
 			auth = authenticator.getAuthHash();
-			DataHolder.getDataHolder().auth = auth;
+			DataHolder.getDataHolder().setAuth(auth);
 		}
-    }
-    
-    protected void runListCameraActivity(){
-		// Get number of cameras and create common DataCamera structure
-		dc = new DataCameras(baseUrl, client);
-		dc.fetchData();
-		DataHolder.getDataHolder().dc = dc;
-		
-		Intent nw_intent = new Intent(this, ListCameras.class);
-		startActivity(nw_intent);
     }
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 		
         // TODO change that!
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy); 
 		
 		// Create shared configuration data structure
-		confData = new ConfigData(getBaseContext());
-		DataHolder.getDataHolder().confData = confData;
+        DataHolder.getDataHolder().setContext(getBaseContext());
+		confData = DataHolder.getDataHolder().getConfigData();
 		
 		if(!confData.checkConfigFile()){
 			
@@ -87,7 +78,7 @@ public class MainActivity extends Activity {
 			
 			// Auth and run CameraActivuty
 			auth();
-			runListCameraActivity();
+			runOnMenuRelease();
 		}
 	}
 	
@@ -108,7 +99,7 @@ public class MainActivity extends Activity {
     			
     			// Auth and run CameraActivuty
     			auth();
-    			runListCameraActivity();
+    			runOnMenuRelease();
     		}
     		break;
         }
@@ -135,4 +126,8 @@ public class MainActivity extends Activity {
 		  }
 		}
 
+	// Function used to be called when menu returns
+	protected abstract void runOnMenuRelease();
+	
 }
+

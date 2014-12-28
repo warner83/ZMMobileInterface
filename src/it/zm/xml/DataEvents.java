@@ -54,6 +54,7 @@ public class DataEvents extends DataManagement {
 					// This happens when an event which is being recorded is parsed
 					// FRAMES field null
 					// Just skip and go on parsing
+					
 				}
 				
 			}

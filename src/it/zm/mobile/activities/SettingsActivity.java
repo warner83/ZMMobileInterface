@@ -21,13 +21,13 @@ public class SettingsActivity extends Activity {
 		setContentView(R.layout.settings_activity);
 		
 		TextView hostText = (TextView)findViewById(R.id.hostText);
-		hostText.setText(DataHolder.getDataHolder().confData.baseUrl);
+		hostText.setText(DataHolder.getDataHolder().getConfigData().baseUrl);
 		
 		TextView userText = (TextView)findViewById(R.id.userText);
-		userText.setText(DataHolder.getDataHolder().confData.username);
+		userText.setText(DataHolder.getDataHolder().getConfigData().username);
 		
 		TextView passwordText = (TextView)findViewById(R.id.passwordText);
-		passwordText.setText(DataHolder.getDataHolder().confData.password);
+		passwordText.setText(DataHolder.getDataHolder().getConfigData().password);
 		
 		Button buttonOK = (Button) findViewById(R.id.buttonConfirm);
 		buttonOK.setOnClickListener( new OnClickListener(){

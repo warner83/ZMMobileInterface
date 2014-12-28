@@ -14,23 +14,35 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class ListCameras extends Activity {
+public class ListCameras extends BasicActivity {
 
+	private static final int REQUEST_NW_SETTING = 0;
+	
 	DataCameras dc;
+	
+	// Context menu data
+	String[] menuItems = {"Events"};
+	String selectedId;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_cameras);
+		super.onCreate(savedInstanceState);
+	}
+	
+	protected void runOnMenuRelease(){
 		
-		dc = DataHolder.getDataHolder().dc;
+		dc = DataHolder.getDataHolder().getDataCameras();
 		
 	    final ListView listview = (ListView) findViewById(R.id.listview);
 	    
@@ -40,11 +52,11 @@ public class ListCameras extends Activity {
     	
 		Log.d("LIST CAMERAS", "Got num cameras: "+numCameras);
 		
-	    //String[] values = new String[] { };
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, names);
         listview.setAdapter(adapter); 
+        
+        registerForContextMenu(listview);
         
         listview.setOnItemClickListener( new AdapterView.OnItemClickListener() {
         	 
@@ -70,7 +82,7 @@ public class ListCameras extends Activity {
       		  Log.d("LIST CAMERAS", "Selected monitor " + position + " ID " + m_id + " width " + dc.getWidth(m_id) + " height " + dc.getHeight(m_id));
       		        		  
               Intent nw_intent = new Intent(ListCameras.this, VideoActivity.class);
-      		  nw_intent.putExtra("url", "http://"+DataHolder.getDataHolder().confData.baseUrl+"/cgi-bin/zms?mode=jpeg&monitor="+(m_id)+"&scale=100&maxfps=5&buffer=1000&"+DataHolder.getDataHolder().auth);
+      		  nw_intent.putExtra("url", "http://"+DataHolder.getDataHolder().getConfigData().baseUrl+"/cgi-bin/zms?mode=jpeg&monitor="+(m_id)+"&scale=100&maxfps=5&buffer=1000&"+DataHolder.getDataHolder().getAuth());
       		  nw_intent.putExtra("width", Integer.toString(dc.getWidth(m_id)));
       		  nw_intent.putExtra("height", Integer.toString(dc.getHeight(m_id)));
       		        		
@@ -82,13 +94,45 @@ public class ListCameras extends Activity {
 		
 	}
 	
-
-	 
-
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.list_cameras, menu);
+	public void onCreateContextMenu(ContextMenu menu, View v,
+	    ContextMenuInfo menuInfo) {
+				
+		if (v.getId()==R.id.listview) {
+		    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+		    
+		    List<String> IDs = dc.getIDs();
+		    
+		    selectedId = IDs.get(info.position);
+		    
+		    List<String> names = dc.getNames();
+		    
+			menu.setHeaderTitle(names.get(info.position));
+		    
+		    for (int i = 0; i<menuItems.length; i++) {
+		      menu.add(Menu.NONE, i, i, menuItems[i]);
+		    }
+		}
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+		int menuItemIndex = item.getItemId();
+		String menuItemName = menuItems[menuItemIndex];
+
+		if(menuItemName.equals("Events")){
+			// Launch event list action with selectedId as camera
+            Toast.makeText(getApplicationContext(),
+              "Showing events :"+selectedId, Toast.LENGTH_LONG)
+              .show();
+            
+            Intent nw_intent = new Intent(ListCameras.this, ListEvents.class);
+    		nw_intent.putExtra("monitor", selectedId);
+    		        		
+    		startActivity(nw_intent);	    
+		}
+		
 		return true;
 	}
 

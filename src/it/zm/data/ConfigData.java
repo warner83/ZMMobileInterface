@@ -15,7 +15,7 @@ public class ConfigData {
 	public String password;
 	public Boolean fullOnActive;
 	public Boolean bandwidthSaverActive;
-	
+		
 	Context context;
 	
 	// Save and handle properties
@@ -23,7 +23,7 @@ public class ConfigData {
 	
 	public ConfigData(Context c){
 		prop = new Properties();
-		 
+				
 		context = c;
 		
 		//set the default properties value
