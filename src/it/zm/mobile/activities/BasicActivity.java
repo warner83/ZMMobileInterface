@@ -13,6 +13,7 @@ import it.zm.xml.DataCameras;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -35,7 +36,7 @@ public abstract class BasicActivity extends Activity {
     ZmHashAuth authenticator;
     
     DataCameras dc;
-    
+        
     protected void auth(){
         auth = null;
         baseUrl = DataHolder.getDataHolder().getBaseUrl();        
@@ -48,8 +49,10 @@ public abstract class BasicActivity extends Activity {
 
 		// Get auth token only if needed
 		if(authenticator.checkAuthNeeded()){
+			
 			auth = authenticator.getAuthHash();
 			DataHolder.getDataHolder().setAuth(auth);
+
 		}
     }
     
@@ -58,7 +61,7 @@ public abstract class BasicActivity extends Activity {
 		
 		super.onCreate(savedInstanceState);
 		
-        // TODO change that!
+        // Change that?
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy); 
 		
