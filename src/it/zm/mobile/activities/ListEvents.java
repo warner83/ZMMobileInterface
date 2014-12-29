@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import it.zm.adapter.EventListAdapter;
 import it.zm.data.DataHolder;
 import it.zm.data.MonitorEvent;
 import it.zm.mobile.R;
@@ -47,11 +48,19 @@ public class ListEvents extends Activity {
 	
 	List<String> names;
 	
+	EventListAdapter adapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.activity_list_events);
 		super.onCreate(savedInstanceState);
 	
+		ListView listview = (ListView) findViewById(R.id.listview);
+		
+		eventList = new ArrayList<MonitorEvent>();
+		adapter = new EventListAdapter(this, eventList);
+		listview.setAdapter(adapter);
+		
 		// Get monitor
         Intent intent = getIntent();
         m_id = intent.getExtras().getString("monitor");
@@ -62,8 +71,6 @@ public class ListEvents extends Activity {
 		// Fetch events
 	    page = 0;
 		de = new DataEvents(DataHolder.getDataHolder().getBaseUrl(), DataHolder.getDataHolder().getHttpClient(), m_id);
-
-		ListView listview = (ListView) findViewById(R.id.listview);
         
         // Add load more button
         Button btnLoadMore = new Button(this);
@@ -95,11 +102,11 @@ public class ListEvents extends Activity {
 	            	int itemPosition     = position;
 	             
 	            	// ListView Clicked item value
-	            	String  itemValue    = (String) listview.getItemAtPosition(position);
+	            	MonitorEvent  item    = (MonitorEvent) listview.getItemAtPosition(position);
 	                
 	            	// Show Alert 
 	            	Toast.makeText(getApplicationContext(),
-	            			"Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
+	            			"Position :"+itemPosition+"  ListItem : " +item.id , Toast.LENGTH_LONG)
 	            			.show();
               
 	                MonitorEvent e = (MonitorEvent) eventList.get(position);
@@ -121,7 +128,7 @@ public class ListEvents extends Activity {
         
         // Create structure for incoming data
         names = new ArrayList<String>();
-        eventList = new ArrayList<MonitorEvent>();
+        
         
         // Get first set of data
         new loadMoreListView().execute();
@@ -156,6 +163,7 @@ public class ListEvents extends Activity {
 					for(int i =0; i < events.size(); ++i ){
             			
             			MonitorEvent e = (MonitorEvent) events.get(i);
+            			e.monitor = m_id;
             			
             			Log.d("LIST EVENTS", "Event ID " + e.id + " time " + e.time + " duration " + e.duration);
             			
@@ -169,15 +177,18 @@ public class ListEvents extends Activity {
 					// Show new entries and restore position
             		int currentPosition = listview.getFirstVisiblePosition();
             		
-            		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(),
+            		/*ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(),
                             android.R.layout.simple_list_item_1, android.R.id.text1, names);
             		listview.setAdapter(adapter);
+            		*/
             		
             		// Restore position
             		if(page > 0)
             			listview.setSelectionFromTop(currentPosition + 1, 0);
             		
             		page++;
+            		
+            		adapter.notifyDataSetChanged();
                 }
             });
  

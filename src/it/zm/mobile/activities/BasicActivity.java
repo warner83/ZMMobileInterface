@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
 public abstract class BasicActivity extends Activity {
 
 	private static final int REQUEST_NW_SETTING = 0;

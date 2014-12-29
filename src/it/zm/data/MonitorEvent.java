@@ -23,6 +23,8 @@ public class MonitorEvent {
 	public String alarmframes;
 	public String maxframeid;
 	
+	public String monitor;
+	
 	public MonitorEvent(){}
 	
 	public MonitorEvent(Node node){
