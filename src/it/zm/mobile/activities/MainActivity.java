@@ -27,7 +27,8 @@ public class MainActivity extends BasicActivity {
 		// Get number of cameras and create common DataCamera structure
 		DataHolder.getDataHolder().getDataCameras().fetchData();
 		
-		Intent nw_intent = new Intent(this, ListCameras.class);
+		//Intent nw_intent = new Intent(this, ListCameras.class);
+		Intent nw_intent = new Intent(this, GridCameras.class);
 		startActivity(nw_intent);
     }
     

@@ -34,6 +34,8 @@ public final class R {
         public static final int activity_vertical_margin=0x7f060001;
         public static final int date=0x7f060002;
         public static final int duration=0x7f060003;
+        public static final int name=0x7f060004;
+        public static final int status=0x7f060005;
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
@@ -42,29 +44,34 @@ public final class R {
         public static final int list_row_selector=0x7f020003;
     }
     public static final class id {
-        public static final int action_settings=0x7f0b000e;
-        public static final int buttonCancel=0x7f0b000d;
-        public static final int buttonConfirm=0x7f0b000c;
-        public static final int date=0x7f0b0003;
-        public static final int duration=0x7f0b0004;
-        public static final int hostText=0x7f0b0007;
-        public static final int listview=0x7f0b0000;
-        public static final int mv=0x7f0b0005;
-        public static final int passwordText=0x7f0b000b;
-        public static final int progressBar1=0x7f0b0001;
-        public static final int textView1=0x7f0b0006;
-        public static final int textView2=0x7f0b0008;
-        public static final int textView3=0x7f0b000a;
-        public static final int thumbnail=0x7f0b0002;
-        public static final int userText=0x7f0b0009;
+        public static final int action_settings=0x7f0b0011;
+        public static final int buttonCancel=0x7f0b0010;
+        public static final int buttonConfirm=0x7f0b000f;
+        public static final int date=0x7f0b0006;
+        public static final int duration=0x7f0b0007;
+        public static final int gridview=0x7f0b0000;
+        public static final int hostText=0x7f0b000a;
+        public static final int listview=0x7f0b0001;
+        public static final int mv=0x7f0b0008;
+        public static final int name=0x7f0b0004;
+        public static final int passwordText=0x7f0b000e;
+        public static final int progressBar1=0x7f0b0002;
+        public static final int status=0x7f0b0005;
+        public static final int textView1=0x7f0b0009;
+        public static final int textView2=0x7f0b000b;
+        public static final int textView3=0x7f0b000d;
+        public static final int thumbnail=0x7f0b0003;
+        public static final int userText=0x7f0b000c;
     }
     public static final class layout {
-        public static final int activity_list_cameras=0x7f030000;
-        public static final int activity_list_events=0x7f030001;
-        public static final int activity_main=0x7f030002;
-        public static final int list_row=0x7f030003;
-        public static final int main=0x7f030004;
-        public static final int settings_activity=0x7f030005;
+        public static final int activity_grid_cameras=0x7f030000;
+        public static final int activity_list_cameras=0x7f030001;
+        public static final int activity_list_events=0x7f030002;
+        public static final int activity_main=0x7f030003;
+        public static final int grid_cell=0x7f030004;
+        public static final int list_row=0x7f030005;
+        public static final int main=0x7f030006;
+        public static final int settings_activity=0x7f030007;
     }
     public static final class menu {
         public static final int list_cameras=0x7f0a0000;
@@ -75,27 +82,28 @@ public final class R {
         public static final int action_settings=0x7f070001;
         public static final int app_name=0x7f070000;
         public static final int hello_world=0x7f070002;
-        public static final int pref_default_display_name=0x7f07000a;
-        public static final int pref_description_social_recommendations=0x7f070008;
+        public static final int pref_default_display_name=0x7f07000b;
+        public static final int pref_description_social_recommendations=0x7f070009;
         /**  Example settings for Data & Sync 
          */
-        public static final int pref_header_data_sync=0x7f07000c;
+        public static final int pref_header_data_sync=0x7f07000d;
         /**  Strings related to Settings 
  Example General settings 
          */
-        public static final int pref_header_general=0x7f070006;
+        public static final int pref_header_general=0x7f070007;
         /**  Example settings for Notifications 
          */
-        public static final int pref_header_notifications=0x7f07000f;
-        public static final int pref_ringtone_silent=0x7f070012;
-        public static final int pref_title_add_friends_to_messages=0x7f07000b;
-        public static final int pref_title_display_name=0x7f070009;
-        public static final int pref_title_new_message_notifications=0x7f070010;
-        public static final int pref_title_ringtone=0x7f070011;
-        public static final int pref_title_social_recommendations=0x7f070007;
-        public static final int pref_title_sync_frequency=0x7f07000d;
-        public static final int pref_title_system_sync_settings=0x7f07000e;
-        public static final int pref_title_vibrate=0x7f070013;
+        public static final int pref_header_notifications=0x7f070010;
+        public static final int pref_ringtone_silent=0x7f070013;
+        public static final int pref_title_add_friends_to_messages=0x7f07000c;
+        public static final int pref_title_display_name=0x7f07000a;
+        public static final int pref_title_new_message_notifications=0x7f070011;
+        public static final int pref_title_ringtone=0x7f070012;
+        public static final int pref_title_social_recommendations=0x7f070008;
+        public static final int pref_title_sync_frequency=0x7f07000e;
+        public static final int pref_title_system_sync_settings=0x7f07000f;
+        public static final int pref_title_vibrate=0x7f070014;
+        public static final int title_activity_grid_cameras=0x7f070006;
         public static final int title_activity_list_cameras=0x7f070004;
         public static final int title_activity_list_events=0x7f070005;
         public static final int title_activity_settings=0x7f070003;

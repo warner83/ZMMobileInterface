@@ -1,5 +1,8 @@
 package it.zm.xml;
 
+import it.zm.data.CameraDesc;
+import it.zm.data.MonitorEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +40,36 @@ public class DataCameras extends DataManagement {
 			return 0;
 		}
 		
+	}
+	
+	public List getAllCameras(){
+		List<CameraDesc> ret = new ArrayList<CameraDesc>();
+		
+		String expression = "/ZM_XML/MONITOR_LIST/MONITOR[ENABLED=1]";
+		
+		try {
+			NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
+						
+			for(int i = 0; i < nodeList.getLength(); ++i ){
+				
+				try{
+					ret.add(new CameraDesc(nodeList.item(i)));
+				} catch (Exception e){
+					
+					// Just skip and go on parsing
+					
+				}
+				
+			}
+			
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			return null;
+		}
+		
+		return ret;
 	}
 	
 	public List getIDs(){
