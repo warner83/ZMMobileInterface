@@ -64,9 +64,10 @@ public class VideoActivity extends Activity {
         
         mv = (MjpegView) findViewById(R.id.mv);
         
-		if(mv!=null){
+        // We don't need resolution anymore
+		/*if(mv!=null){
 			mv.setResolution(width, height);
-		}
+		}*/
         
         new DoRead().execute(URL);
     }
@@ -76,10 +77,8 @@ public class VideoActivity extends Activity {
     	Log.d(TAG, "Back pressed");
         
         if(mv!=null){
-        	if(mv.isStreaming()){
-		        mv.stopPlayback();
-		        suspending = true;
-        	}
+		     mv.stopPlayback();
+		     suspending = true;
         }
         
         Log.d(TAG, "VideoActivity stopped");
@@ -110,10 +109,8 @@ public class VideoActivity extends Activity {
     	Log.d(TAG,"onPause()");
         super.onPause();
         if(mv!=null){
-        	if(mv.isStreaming()){
-		        mv.stopPlayback();
-		        suspending = true;
-        	}
+		     mv.stopPlayback();
+		     suspending = true;
         }
     }
     @Override

@@ -33,10 +33,12 @@ public class ZmHashAuth {
 	}
 	
 	public Boolean checkAuthNeeded(){
+		
 		HttpGet request = new HttpGet(url);
 	 
 		request.addHeader("User-Agent", "Mozilla");
 		HttpResponse response;
+
 		try {
 			Log.d("ZMAUTH","request "+url);
 			response = client.execute(request);

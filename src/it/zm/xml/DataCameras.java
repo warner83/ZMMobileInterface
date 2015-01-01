@@ -174,4 +174,47 @@ public class DataCameras extends DataManagement {
 
 		return ret;
 	}
+	
+	// Get worst height
+	public CameraDesc getMaxHeight(){
+		List<CameraDesc> cameras = getAllCameras();
+		int max = 0;
+		CameraDesc maxC = null;
+		
+		for(int i =0; i< cameras.size(); i++){
+			int height = Integer.parseInt(cameras.get(i).height);
+			if(max <= height){
+				max = height;
+				maxC = cameras.get(i);
+			}
+		}
+		
+		return maxC;
+		
+	}
+	
+	// Get worst height
+	public CameraDesc getMaxHeight(String min_id, String max_id){
+		List<CameraDesc> cameras = getAllCameras();
+		int max = 0;
+		CameraDesc maxC = null;
+		
+		int init = Integer.parseInt(min_id);
+		int end = Integer.parseInt(max_id);
+		
+		for(int i = init; i <= end; i++){
+			if( i >= cameras.size() )
+				// Alone in the raw!
+				break;
+			
+			int height = Integer.parseInt(cameras.get(i).height);
+			if(max <= height){
+				max = height;
+				maxC = cameras.get(i);
+			}
+		}
+		
+		return maxC;
+		
+	}
 }

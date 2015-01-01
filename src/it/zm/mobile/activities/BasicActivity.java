@@ -1,15 +1,19 @@
 package it.zm.mobile.activities;
 
+import java.util.List;
+
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import it.zm.auth.ZmHashAuth;
 import it.zm.data.ConfigData;
 import it.zm.data.DataHolder;
+import it.zm.data.MonitorEvent;
 import it.zm.mobile.R;
 import it.zm.mobile.R.id;
 import it.zm.mobile.R.layout;
 import it.zm.mobile.R.menu;
 import it.zm.xml.DataCameras;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.app.Activity;
@@ -19,6 +23,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 public abstract class BasicActivity extends Activity {
 
@@ -26,17 +31,26 @@ public abstract class BasicActivity extends Activity {
 	
 	private static final String TAG = "BASIC_ACTIVITY";
 	
-    ConfigData confData;
-    String auth;
-    String baseUrl;
+    private ConfigData confData;
+    private String auth;
+    private String baseUrl;
     
-    DefaultHttpClient client;
+    private DefaultHttpClient client;
     
-    ZmHashAuth authenticator;
+    private ZmHashAuth authenticator;
     
-    DataCameras dc;
-        
+    private DataCameras dc;
+            
     protected void auth(){
+    	
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+              
+            }
+          };
+          new Thread(runnable).start();
+    	
         auth = null;
         baseUrl = DataHolder.getDataHolder().getBaseUrl();        
         
@@ -51,10 +65,10 @@ public abstract class BasicActivity extends Activity {
 			
 			auth = authenticator.getAuthHash();
 			DataHolder.getDataHolder().setAuth(auth);
-
 		}
+		
     }
-    
+        
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -78,7 +92,7 @@ public abstract class BasicActivity extends Activity {
 			// We have a configuration file -> load data
 			confData.load();
 			
-			// Auth and run CameraActivuty
+			// Authenticate
 			auth();
 			runOnMenuRelease();
 		}
@@ -99,7 +113,7 @@ public abstract class BasicActivity extends Activity {
     			// Got configuration data -> save them
     			confData.save();
     			
-    			// Auth and run CameraActivuty
+    			// Authenticate
     			auth();
     			runOnMenuRelease();
     		}

@@ -113,12 +113,30 @@ public class ListEvents extends Activity {
 	              
 	      		    String e_id = e.id;
 	              
-	      		    Log.d("LIST EVENTS", "Event ID " + e_id + " width " + dc.getWidth(m_id) + " height " + dc.getHeight(m_id));
+	        		  // Evaluate size
+	                double max_width = listview.getWidth();
+	                double max_height = listview.getHeight();
+	                double width = dc.getWidth(m_id);
+	                double height = dc.getHeight(m_id);
+	                
+	                int perc = 0;
+	                
+	                perc = (int) Math.round(width / max_width * 100);
+	                if( perc > ( height / max_height * 100 ) )
+	              	  perc = (int) Math.round(height / max_height * 100);
+	               
+	                if(perc > 100)
+	              	  perc = 100;
+	      		    
+	                int act_width = (int) Math.round(width * (width / max_width));
+	                int act_height = (int) Math.round(height * (height / max_height));  
+	                
+	      		    Log.d("LIST EVENTS", "Event ID " + e_id + " width " + dc.getWidth(m_id) + " height " + dc.getHeight(m_id)+ " perc " + perc );
 	      		        		  
 	                Intent nw_intent = new Intent(ListEvents.this, VideoActivity.class);
-	      		    nw_intent.putExtra("url", "http://"+DataHolder.getDataHolder().getConfigData().baseUrl+"/cgi-bin/zms?source=event&mode=jpeg&event="+e_id+"&monitor="+(m_id)+"&frame=1&scale=100&maxfps=5&buffer=1000&replay=single&"+DataHolder.getDataHolder().getAuth());
-	      		    nw_intent.putExtra("width", Integer.toString(dc.getWidth(m_id)));
-	      		    nw_intent.putExtra("height", Integer.toString(dc.getHeight(m_id)));
+	      		    nw_intent.putExtra("url", "http://"+DataHolder.getDataHolder().getConfigData().baseUrl+"/cgi-bin/zms?source=event&mode=jpeg&event="+e_id+"&monitor="+(m_id)+"&frame=1&scale="+perc+"&maxfps=5&buffer=1000&replay=single&"+DataHolder.getDataHolder().getAuth());
+	      		    nw_intent.putExtra("width", Integer.toString(act_width));
+	      		    nw_intent.putExtra("height", Integer.toString(act_height));
 	      		        		
 	      		    startActivity(nw_intent);	    
            

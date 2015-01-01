@@ -80,12 +80,33 @@ public class GridCameras extends BasicActivity {
               
       		  String m_id = IDs.get(position);
               
-      		  Log.d("LIST CAMERAS", "Selected monitor " + position + " ID " + m_id + " width " + dc.getWidth(m_id) + " height " + dc.getHeight(m_id));
-      		        		  
+      		  // Evaluate size
+              double max_width = gridview.getWidth();
+              double max_height = gridview.getHeight();
+              double width = dc.getWidth(m_id);
+              double height = dc.getHeight(m_id);
+              int act_width;
+              int act_height;
+              
+              int perc = 0;
+              
+              perc = (int) Math.round(width / max_width * 100);
+              if( perc > ( height / max_height * 100 ) )
+            	  perc = (int) Math.round(height / max_height * 100);
+              
+              if(perc > 100)
+            	  perc = 100;
+              
+              act_width = (int) Math.round(width * (width / max_width));
+              act_height = (int) Math.round(height * (height / max_height));   
+              
+      		  Log.d("LIST CAMERAS", "Selected monitor " + position + " ID " + m_id + " width " + dc.getWidth(m_id) + " height " + dc.getHeight(m_id) + " perc " + (int)perc );
+      		        		 
+      		  // Create new activity
               Intent nw_intent = new Intent(GridCameras.this, VideoActivity.class);
-      		  nw_intent.putExtra("url", "http://"+DataHolder.getDataHolder().getConfigData().baseUrl+"/cgi-bin/zms?mode=jpeg&monitor="+(m_id)+"&scale=100&maxfps=5&buffer=1000&"+DataHolder.getDataHolder().getAuth());
-      		  nw_intent.putExtra("width", Integer.toString(dc.getWidth(m_id)));
-      		  nw_intent.putExtra("height", Integer.toString(dc.getHeight(m_id)));
+      		  nw_intent.putExtra("url", "http://"+DataHolder.getDataHolder().getConfigData().baseUrl+"/cgi-bin/zms?mode=jpeg&monitor="+(m_id)+"&scale="+(int)perc+"&maxfps=5&buffer=1000&"+DataHolder.getDataHolder().getAuth());
+      		  nw_intent.putExtra("width", Integer.toString(act_width));
+      		  nw_intent.putExtra("height", Integer.toString(act_height));
       		        		
       		  startActivity(nw_intent);	    
            
