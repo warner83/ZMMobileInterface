@@ -82,7 +82,7 @@ public class CameraAdapter extends BaseAdapter {
         int max_width = gridview.getWidth() / gridview.getNumColumns();
         // Get the maximum height of a raw
         CameraDesc maxC = DataHolder.getDataHolder().getDataCameras().getMaxHeight(Integer.toString(first), Integer.toString(last));
-        int max_height = (int) (( (double) max_width / Integer.parseInt(maxC.width) * Integer.parseInt(maxC.height)) / gridview.getNumColumns());
+        int max_height = (int) (( (double) max_width / Integer.parseInt(maxC.width) * Integer.parseInt(maxC.height)));
         Log.d("CAMERA ADAPTER", "Max width " + max_width);
         Log.d("CAMERA ADAPTER", "Max height " + max_height);
         

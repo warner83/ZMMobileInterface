@@ -38,7 +38,7 @@
             android:label="@string/title_activity_grid_cameras" >
         </activity>
         <activity
-            android:name="it.zm.mobile.activities.ListCameras"
+            android:name="it.zm.mobile.deprecated.ListCameras"
             android:label="@string/title_activity_list_cameras" >
         </activity>
         <activity

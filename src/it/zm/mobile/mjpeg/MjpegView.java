@@ -109,6 +109,10 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
                         synchronized (mSurfaceHolder) {
                             try {
                                 bm = mIn.readMjpegFrame();
+                                
+                                if(bm == null)
+                                	continue; // Just wait a little bit more!
+                                
                                 destRect = destRect(bm.getWidth(),bm.getHeight());
                                 c.drawColor(Color.BLACK);
                                 c.drawBitmap(bm, null, destRect, p);
@@ -165,6 +169,7 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
         boolean retry = true;
         while(retry) {
             try {
+            	thread.interrupt(); // Seems to fix freezing sometimes
                 thread.join();
                 retry = false;
             } catch (InterruptedException e) {}

@@ -1,4 +1,4 @@
-package it.zm.mobile.activities;
+package it.zm.mobile.deprecated;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +8,8 @@ import it.zm.data.DataHolder;
 import it.zm.mobile.R;
 import it.zm.mobile.R.layout;
 import it.zm.mobile.R.menu;
+import it.zm.mobile.activities.ListEvents;
+import it.zm.mobile.activities.VideoActivity;
 import it.zm.xml.DataCameras;
 import android.os.Bundle;
 import android.app.Activity;
@@ -24,7 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class ListCameras extends BasicActivity {
+public class ListCameras extends Activity {
 
 	private static final int REQUEST_NW_SETTING = 0;
 	
@@ -38,6 +40,8 @@ public class ListCameras extends BasicActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.activity_list_cameras);
 		super.onCreate(savedInstanceState);
+		
+		runOnMenuRelease();
 	}
 	
 	protected void runOnMenuRelease(){

@@ -44,7 +44,7 @@ public abstract class DataManagement {
 	protected abstract String getOperationSuffix();
 	
 	// Maybe this should be performed automatically when the object is created
-	public void fetchData(){
+	public void fetchData() throws IllegalStateException, IOException, SAXException{
 		
 		// Update url... just in case
 		String u = url + getOperationSuffix();
@@ -52,58 +52,44 @@ public abstract class DataManagement {
 		System.out.println(u);
 		
 		HttpGet request = new HttpGet(u);
-		
-		//System.out.println(u);
-		 
+				 
 		request.addHeader("User-Agent", "Mozilla");
 		HttpResponse response;
-		try {
-			response = client.execute(request);
-			System.out.println("Response Code : " 
-	                + response.getStatusLine().getStatusCode());
+
+		response = client.execute(request);
+		System.out.println("Response Code : " 
+                + response.getStatusLine().getStatusCode());
+		
+		if(response.getStatusLine().getStatusCode() != 200)
+			throw new IOException("Connection error");
+ 
+		BufferedReader rd = new BufferedReader(
+			new InputStreamReader(response.getEntity().getContent()));
 	 
-			BufferedReader rd = new BufferedReader(
-				new InputStreamReader(response.getEntity().getContent()));
-		 
-			StringBuffer result = new StringBuffer();
-			String line = "";
-			while ((line = rd.readLine()) != null) {
-				result.append(line);
-			}
-			
-			// Set fetched data
-			String xml = result.toString();
-			
-			System.out.println(xml);
-			
-			// Create the xml document
-			DocumentBuilderFactory builderFactory =
-			        DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = null;
-			try {
-			    builder = builderFactory.newDocumentBuilder();
-			} catch (ParserConfigurationException e) {
-			    e.printStackTrace(); 
-			}
-			
-			xmlDocument = builder.parse(new ByteArrayInputStream(xml.getBytes()));
-			
-			init = true;
-			
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		StringBuffer result = new StringBuffer();
+		String line = "";
+		while ((line = rd.readLine()) != null) {
+			result.append(line);
 		}
 		
+		// Set fetched data
+		String xml = result.toString();
+		
+		System.out.println(xml);
+		
+		// Create the xml document
+		DocumentBuilderFactory builderFactory =
+		        DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = null;
+		try {
+		    builder = builderFactory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+		    e.printStackTrace(); 
+		}
+		
+		xmlDocument = builder.parse(new ByteArrayInputStream(xml.getBytes()));
+		
+		init = true;
 		
 	}
 

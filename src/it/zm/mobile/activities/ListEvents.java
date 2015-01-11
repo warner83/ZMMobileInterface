@@ -1,9 +1,12 @@
 package it.zm.mobile.activities;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.xml.sax.SAXException;
 
 import it.zm.adapter.EventListAdapter;
 import it.zm.data.DataHolder;
@@ -11,6 +14,7 @@ import it.zm.data.MonitorEvent;
 import it.zm.mobile.R;
 import it.zm.mobile.R.layout;
 import it.zm.mobile.R.menu;
+import it.zm.util.Util;
 import it.zm.xml.DataCameras;
 import it.zm.xml.DataEvents;
 import android.os.AsyncTask;
@@ -57,21 +61,6 @@ public class ListEvents extends Activity {
 	
 		ListView listview = (ListView) findViewById(R.id.listview);
 		
-		eventList = new ArrayList<MonitorEvent>();
-		adapter = new EventListAdapter(this, eventList);
-		listview.setAdapter(adapter);
-		
-		// Get monitor
-        Intent intent = getIntent();
-        m_id = intent.getExtras().getString("monitor");
-		
-        // Get DataCameras structure
-		dc = DataHolder.getDataHolder().getDataCameras();
-	    
-		// Fetch events
-	    page = 0;
-		de = new DataEvents(DataHolder.getDataHolder().getBaseUrl(), DataHolder.getDataHolder().getHttpClient(), m_id);
-        
         // Add load more button
         Button btnLoadMore = new Button(this);
         btnLoadMore.setText("Load More");
@@ -87,6 +76,21 @@ public class ListEvents extends Activity {
         
         // Adding button to listview at footer
         listview.addFooterView(btnLoadMore);
+		
+		eventList = new ArrayList<MonitorEvent>();
+		adapter = new EventListAdapter(this, eventList);
+		listview.setAdapter(adapter);
+		
+		// Get monitor
+        Intent intent = getIntent();
+        m_id = intent.getExtras().getString("monitor");
+		
+        // Get DataCameras structure
+		dc = DataHolder.getDataHolder().getDataCameras();
+	    
+		// Fetch events
+	    page = 0;
+		de = new DataEvents(DataHolder.getDataHolder().getBaseUrl(), DataHolder.getDataHolder().getHttpClient(), m_id);
         
         registerForContextMenu(listview);
         
@@ -121,20 +125,20 @@ public class ListEvents extends Activity {
 	                
 	                int perc = 0;
 	                
-	                perc = (int) Math.round(width / max_width * 100);
-	                if( perc > ( height / max_height * 100 ) )
-	              	  perc = (int) Math.round(height / max_height * 100);
+	                perc = (int) Math.round(max_width / width * 100);
+	                if( perc > ( max_height / height * 100 ) )
+	              	  perc = (int) Math.round(max_height / height * 100);
 	               
 	                if(perc > 100)
 	              	  perc = 100;
 	      		    
-	                int act_width = (int) Math.round(width * (width / max_width));
-	                int act_height = (int) Math.round(height * (height / max_height));  
+	                int act_width = (int) Math.round(width * (max_width / width));
+	                int act_height = (int) Math.round(height * (max_height / height));  
 	                
 	      		    Log.d("LIST EVENTS", "Event ID " + e_id + " width " + dc.getWidth(m_id) + " height " + dc.getHeight(m_id)+ " perc " + perc );
 	      		        		  
 	                Intent nw_intent = new Intent(ListEvents.this, VideoActivity.class);
-	      		    nw_intent.putExtra("url", "http://"+DataHolder.getDataHolder().getConfigData().baseUrl+"/cgi-bin/zms?source=event&mode=jpeg&event="+e_id+"&monitor="+(m_id)+"&frame=1&scale="+perc+"&maxfps=5&buffer=1000&replay=single&"+DataHolder.getDataHolder().getAuth());
+	      		    nw_intent.putExtra("url", "http://"+DataHolder.getDataHolder().getConfigData().baseUrl+"/cgi-bin/zms?source=event&mode=jpeg&event="+e_id+"&monitor="+(m_id)+"&frame=1&scale="+perc+"&maxfps=1&buffer=1000&replay=single&"+DataHolder.getDataHolder().getAuth());
 	      		    nw_intent.putExtra("width", Integer.toString(act_width));
 	      		    nw_intent.putExtra("height", Integer.toString(act_height));
 	      		        		
@@ -152,6 +156,8 @@ public class ListEvents extends Activity {
         new loadMoreListView().execute();
 		
 	}
+	
+	
 	
 	// Async task to load more events
     private class loadMoreListView extends AsyncTask<Void, Void, Void> {
@@ -174,7 +180,23 @@ public class ListEvents extends Activity {
                 	
                     // Get data
             		de.setPage(Integer.toString(page));
-            		de.fetchData();
+            		
+            		try {
+						de.fetchData();
+					} catch (IllegalStateException err) {
+						err.printStackTrace();
+						
+						Util.handleException(err, ListEvents.this);
+					} catch (IOException err) {
+						err.printStackTrace();
+						
+						Util.handleException(err, ListEvents.this);
+					} catch (SAXException err) {
+						err.printStackTrace();
+						
+						Util.handleException(err, ListEvents.this);
+					}
+            		
             		List events = de.getAllEvents();
             		
             		// Parse information and copy data to local structure 

@@ -64,11 +64,6 @@ public class VideoActivity extends Activity {
         
         mv = (MjpegView) findViewById(R.id.mv);
         
-        // We don't need resolution anymore
-		/*if(mv!=null){
-			mv.setResolution(width, height);
-		}*/
-        
         new DoRead().execute(URL);
     }
 
@@ -172,7 +167,8 @@ public class VideoActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Void v) {
-			startActivity((new Intent(VideoActivity.this, VideoActivity.class)));
+			//startActivity((new Intent(VideoActivity.this, VideoActivity.class)));
+			startActivity(getIntent());
 		}
 	}
 }
