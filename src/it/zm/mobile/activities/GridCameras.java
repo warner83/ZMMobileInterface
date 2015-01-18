@@ -120,6 +120,8 @@ public class GridCameras extends Activity {
               
               if(perc > 100)
             	  perc = 100;
+              
+              //perc /= 3; // Do that for bandwidth saving
                             
               act_width = (int) Math.round(width * (max_width / width));
               act_height = (int) Math.round(height * (max_height / height));  
@@ -214,10 +216,13 @@ public class GridCameras extends Activity {
     			ConfigData confData = DataHolder.getDataHolder().getConfigData();
     			
     			// Recover data
-    			confData.baseUrl = data.getExtras().getString("hostText");
-    			confData.username = data.getExtras().getString("userText");
-    			confData.password = data.getExtras().getString("passwordText");
+    			String baseUrl = data.getExtras().getString("hostText");
+    			String username = data.getExtras().getString("userText");
+    			String password = data.getExtras().getString("passwordText");
 
+    			confData.addServer(baseUrl, username, password);
+    			confData.selectServer(0);
+    			
     			Log.d("LIST CAMERAS", "Base URL: "+confData.baseUrl);
     			
     			// Got configuration data -> save them

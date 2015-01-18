@@ -18,6 +18,7 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
         android:background="#111"/>
+    
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/gridview"
     android:layout_width="match_parent"
@@ -27,5 +28,5 @@
     android:horizontalSpacing="10dp"
     android:stretchMode="columnWidth"
     android:gravity="center"
-/>
+    />
 </android.support.v4.widget.DrawerLayout>

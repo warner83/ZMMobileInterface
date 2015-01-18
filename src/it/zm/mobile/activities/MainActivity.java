@@ -167,9 +167,12 @@ public class MainActivity extends Activity {
     			ConfigData confData = DataHolder.getDataHolder().getConfigData();
     			
     			// Recover data
-    			confData.baseUrl = data.getExtras().getString("hostText");
-    			confData.username = data.getExtras().getString("userText");
-    			confData.password = data.getExtras().getString("passwordText");
+    			String baseUrl = data.getExtras().getString("hostText");
+    			String username = data.getExtras().getString("userText");
+    			String password = data.getExtras().getString("passwordText");
+
+    			confData.addServer(baseUrl, username, password);
+    			confData.selectServer(0);
 
     			Log.d("MainActivity", "Base URL: "+confData.baseUrl);
     			
