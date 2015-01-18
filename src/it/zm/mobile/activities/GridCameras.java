@@ -6,11 +6,13 @@ import java.util.List;
 
 import it.zm.adapter.CameraAdapter;
 import it.zm.adapter.EventListAdapter;
+import it.zm.adapter.NavDrawerListAdapter;
 import it.zm.auth.ZmHashAuth;
 import it.zm.data.CameraDesc;
 import it.zm.data.ConfigData;
 import it.zm.data.DataHolder;
 import it.zm.data.MonitorEvent;
+import it.zm.data.NavDrawerItem;
 import it.zm.mobile.R;
 import it.zm.mobile.R.layout;
 import it.zm.mobile.R.menu;
@@ -20,6 +22,8 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -48,7 +52,10 @@ public class GridCameras extends Activity {
 	
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-    private List<String> names;
+    
+    private ArrayList<NavDrawerItem> navDrawerItems;
+    private TypedArray navMenuIcons;
+    private ActionBarDrawerToggle mDrawerToggle;
 
 	
 	@Override
@@ -56,20 +63,50 @@ public class GridCameras extends Activity {
 		setContentView(R.layout.activity_grid_cameras);
 		super.onCreate(savedInstanceState);
 		
-		// TODO Navigation drawer
-        /*mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		// Navigation drawer
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        
+        // nav drawer icons from resources
+        navMenuIcons = getResources()
+                .obtainTypedArray(R.array.nav_drawer_icons);
+        
+        navDrawerItems = new ArrayList<NavDrawerItem>();
+        navDrawerItems.add(new NavDrawerItem("Camera", navMenuIcons.getResourceId(0, -1)));
+        navDrawerItems.add(new NavDrawerItem("Settings", navMenuIcons.getResourceId(1, -1)));
+        
+        // setting the nav drawer list adapter
+        NavDrawerListAdapter adapter = new NavDrawerListAdapter(getApplicationContext(),
+                navDrawerItems);
+        mDrawerList.setAdapter(adapter);
 
-        // Set the adapter for the list view
-        names = new ArrayList<String>();
-        names.add(new String("Uno"));
-        names.add(new String("Due"));
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, names);
-        mDrawerList.setAdapter(adapter);*/
-
+        // enabling action bar app icon and behaving it as toggle button
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.drawable.ic_launcher, //nav menu toggle icon
+                R.string.app_name, // nav drawer open - description for accessibility
+                R.string.app_name // nav drawer close - description for accessibility
+        ) {
+            public void onDrawerClosed(View view) {
+                getActionBar().setTitle("Camera ID"); // TODO show server ID
+                // calling onPrepareOptionsMenu() to show action bar icons
+                invalidateOptionsMenu();
+            }
+ 
+            public void onDrawerOpened(View drawerView) {
+                getActionBar().setTitle("Select one server");
+                // calling onPrepareOptionsMenu() to hide action bar icons
+                invalidateOptionsMenu();
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        
 		initGridView();
 	}
+	
+	
 	
 	protected void initGridView(){
 		
@@ -142,6 +179,8 @@ public class GridCameras extends Activity {
             }
 
        }); 
+        
+        getActionBar().setTitle("Server ID"); // TODO Show server name
 		
 	}
 	
@@ -195,6 +234,12 @@ public class GridCameras extends Activity {
 	}
 	
 	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		// toggle nav drawer on selecting action bar app icon/title
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+		
 		  switch (item.getItemId()) {
 		    case R.id.action_settings:
 		    	// Open Settings Action

@@ -8,4 +8,10 @@
     <string name="title_activity_list_cameras">ListCameras</string>
 	<string name="title_activity_list_events">ListCameras</string>
 	<string name="title_activity_grid_cameras">ListCameras</string>
+	
+	    <array name="nav_drawer_icons">
+        <item>@drawable/ic_camera</item>
+        <item>@drawable/ic_settings</item>
+    </array>
+	
 </resources>
